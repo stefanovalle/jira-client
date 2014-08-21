@@ -1,0 +1,41 @@
+<%- layout( '../layout' ) %>
+<%- partial( '../menu' ) %>
+
+<h4>List Your Filters</h4>
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <% if(filters.length > 0) { %>
+        <table class="table table-bordered" style="background-color: #ffffff;">
+            <thead>
+            <tr>
+                <th>Name Filter</th>
+                <th>Id Filter On Jira</th>
+                <th>Registration Date</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% filters.forEach(function (filter){ %>
+            <tr>
+                <td><%- filter.related('filter').get('name') %></td>
+                <td><%- filter.related('filter').get('id_filter_on_jira') %></td>
+                <td><%- filter.get('registration_date') %></td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a type="button" class="btn btn-default" href="/filter/view/<%- filter.related('filter').get('id_filter_on_jira') %>">
+                            <span class="glyphicon glyphicon-eye-open"></span> View Issues
+                        </a>
+                        <a type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-plus-sign"></span> New Issue
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+        <% } %>
+    </div>
+</div>

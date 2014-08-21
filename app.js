@@ -16,7 +16,7 @@ var flash = require('connect-flash');
  */
 var index = require('./routes/index');
 var dashboard = require('./routes/dashboard');
-var project = require('./routes/project');
+var filter = require('./routes/filter');
 
 var app = express();
 
@@ -51,7 +51,7 @@ app.use(flash());
  */
 app.use('/', index);
 app.use('/dashboard', dashboard);
-app.use('/project', project);
+app.use('/filter', filter);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

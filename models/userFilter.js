@@ -1,10 +1,10 @@
 var bookshelf = require('../config/db-config.js');
 
 var userProject = bookshelf.Model.extend({
-    tableName: 'user-projects',
-    project: function() {
-        var Project = require('./project');
-        return this.belongsTo(Project, "project_id");
+    tableName: 'user-filters',
+    filter: function() {
+        var Filter = require('./filter');
+        return this.belongsTo(Filter, "filter_id");
     },
     user: function() {
         var User = require('./user');

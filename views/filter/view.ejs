@@ -1,0 +1,24 @@
+<%- layout( '../layout' ) %>
+<%- partial( '../menu' ) %>
+
+<h3>List issues for Filter by: <em><%- filter.get('name') %> (<%- issues.total %>)</em></h3>
+
+<% if(issues.total > 0) { %>
+    <% issues.issues.forEach(function (issue){ %>
+        <div class="row">
+            <ul class="col-lg-12">
+                <li class="list-group-item">
+                    <h3><%- issue.fields.summary %></h3>
+                    <p><%- issue.fields.description %></p>
+                    <p>Created: <%- issue.fields.created %></p>
+                    <p>Progress: <%- issue.fields.aggregateprogress.percent %>%</p>
+                    <span class="label label-default">#<%- issue.id %></span>
+                    <span class="label label-info"><%- issue.key %></span>
+                    <span class="label label-info">Priority: <%- issue.fields.priority.name %></span>
+                    <span class="label label-info">Status: <%- issue.fields.status.name %></span>
+                </li>
+            </ul>
+        </div>
+    <% }); %>
+<% } %>
+
