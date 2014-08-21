@@ -1,0 +1,8 @@
+var jira = {
+        host: 'host.atlassian.net',
+        port: '',
+        user: 'user',
+        password: 'password'
+};
+
+module.exports = jira;

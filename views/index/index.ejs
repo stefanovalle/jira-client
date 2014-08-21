@@ -1,0 +1,22 @@
+<%- layout( '../layout' ) %>
+
+<div class="container">
+
+    <form class="form-signin" action="/admin" enctype="application/x-www-form-urlencoded" method="post" role="form">
+        <h2 class="form-signin-heading">Jira Client</h2>
+
+        <% if(message.length > 0) { %>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-danger"><%= message %></div>
+            </div>
+        </div>
+        <% } %>
+
+        <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    </form>
+
+</div> <!-- /container -->
+
