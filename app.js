@@ -1,23 +1,13 @@
 var express = require('express');
 var session = require('express-session');
+var flash = require('connect-flash');
 var path = require('path');
-var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var engine  = require('ejs-locals');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
-
-/**
- * Controllers
- * @type {router|exports}
- */
-var index = require('./routes/index');
-var dashboard = require('./routes/dashboard');
-var filter = require('./routes/filter');
-
 var app = express();
 
 // view engine setup
@@ -25,13 +15,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 
-app.use(favicon());
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(flash());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
 
 /**
  * Session
@@ -47,17 +37,39 @@ app.use(passport.session());
 app.use(flash());
 
 /**
+ * Passport Config
+ */
+require('./config/passport');
+
+/**
+ * RequireLogin
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+function requireLogin(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect("/");
+    }
+}
+
+/**
  * Routes
  */
+var index = require('./routes/index');
+var dashboard = require('./routes/dashboard');
+var filter = require('./routes/filter');
+
 app.use('/', index);
 app.use('/dashboard', dashboard);
 app.use('/filter', filter);
 
 /// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+app.use(function (req, res) {
+    res.status(404).render('404', {});
 });
 
 /// error handlers

@@ -10,10 +10,8 @@ var Jira = require('../jira');
 router.route('/')
     .get(function (req, res, next) {
 
-        new userFilter({'user_id': '1'})
-            .fetch({
-                withRelated: ['filter', 'user']
-            })
+        new userFilter({'user_id': req.session.passport.user})
+            .fetch()
             .then(function(userFilter) {
 
                 res.render('filter/index', {

@@ -4,7 +4,7 @@ var User = bookshelf.Model.extend({
     tableName: 'users',
     filters: function() {
         var userProjects = require("./userFilters");
-        return this.hasMany(userProjects, "filter_id");
+        return this.hasMany(userProjects, "user_id");
     }
 });
 

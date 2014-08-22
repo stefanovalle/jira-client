@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../models/user');
+var passport = require('passport');
 
 /**
  * Login
@@ -12,14 +12,19 @@ router.route('/')
             message: req.flash('error')
         });
     })
+    .post(passport.authenticate('user-local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/',
+        failureFlash: 'Invalid username or password.'
+    }));
 
 /**
  * Login
  */
-router.route('/logout')
-    .get(function (req, res, next) {
-        res.send();
-    });
+router.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
 
 module.exports = router;
