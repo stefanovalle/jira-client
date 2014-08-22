@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var userFilter = require('../collections/userFilter');
+var userFilter = require('../models/userFilter');
 var filter = require('../models/filter');
 var Jira = require('../jira');
 
@@ -10,10 +10,9 @@ var Jira = require('../jira');
 router.route('/')
     .get(function (req, res, next) {
 
-        new userFilter({'user_id': req.session.passport.user})
-            .fetch()
+        userFilter.where({'user_id': req.session.passport.user})
+            .fetchAll({withRelated: ['filter']})
             .then(function(userFilter) {
-
                 res.render('filter/index', {
                     filters: userFilter
                 });

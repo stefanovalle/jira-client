@@ -64,7 +64,7 @@ var dashboard = require('./routes/dashboard');
 var filter = require('./routes/filter');
 
 app.use('/', index);
-app.use('/dashboard', dashboard);
+app.use('/dashboard', requireLogin, dashboard);
 app.use('/filter', filter);
 
 /// catch 404 and forward to error handler
