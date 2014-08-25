@@ -7,8 +7,7 @@ var Jira = require('../jira');
 /**
  * Index
  */
-router.route('/')
-    .get(function (req, res, next) {
+router.get('/', isLoggedIn, function (req, res, next) {
 
         userFilter.where({'user_id': req.session.passport.user})
             .fetchAll({withRelated: ['filter']})
@@ -22,8 +21,7 @@ router.route('/')
 /**
  * View
  */
-router.route('/view/:id')
-    .get(function (req, res, next) {
+router.get('/view/:id', isLoggedIn, function (req, res, next) {
 
         new filter({'id_filter_on_jira' :  req.param('id')})
             .fetch()
@@ -55,5 +53,19 @@ router.route('/view/:id')
             });
     });
 
+/**
+ * Check if isLogged
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function isLoggedIn(req, res, next) {
+
+    if (req.isAuthenticated())
+        return next();
+
+    res.redirect('/');
+}
 
 module.exports = router;

@@ -17,11 +17,13 @@ passport.use('user-local', new LocalStrategy({
     function(username, password, done) {
 
         new User({'email': username, 'password' : password})
-            .fetch()
+            .fetch({require: true})
             .then(function(user) {
-                if (!user) return done(null, false);
                 return done(null, user.attributes);
+            }).catch(User.NotFoundError, function() {
+                return done(null, false);
+            }).catch(function(err) {
+                return done(err);
             });
     }
 ));
-
