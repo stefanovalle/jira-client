@@ -9,49 +9,66 @@ var Jira = require('../jira');
  */
 router.get('/', isLoggedIn, function (req, res, next) {
 
-        userFilter.where({'user_id': req.session.passport.user})
-            .fetchAll({withRelated: ['filter']})
-            .then(function(userFilter) {
-                res.render('filter/index', {
-                    filters: userFilter
-                });
+    userFilter.where({'user_id': req.session.passport.user})
+        .fetchAll({withRelated: ['filter']})
+        .then(function (userFilter) {
+            res.render('filter/index', {
+                filters: userFilter
             });
-    });
+        });
+});
 
 /**
  * View
  */
 router.get('/view/:id', isLoggedIn, function (req, res, next) {
 
-        new filter({'id_filter_on_jira' :  req.param('id')})
-            .fetch()
-            .then(function(filter) {
+    new filter({'id_filter_on_jira': req.param('id')})
+        .fetch({require: true})
+        .then(function (filter) {
 
-                var jql = 'filter = ' + filter.get('id_filter_on_jira');
-                Jira.searchJira(jql, {
-                    maxResults: 20,
-                    fields: [
-                        'summary',
-                        'description',
-                        'created',
-                        'aggregateprogress',
-                        'priority',
-                        'status',
-                        'assignee',
-                        'creator'
-                    ]
-                }, function(error, issues) {
+            new userFilter({
+                'user_id': req.session.passport.user,
+                'filter_id': filter.get('id')
+            })
+                .fetch({require: true})
+                .then(function (userFilter) {
 
-                    if (error) throw error;
+                    var jql = 'filter = ' + filter.get('id_filter_on_jira');
+                    Jira.searchJira(jql, {
+                        maxResults: 20,
+                        fields: [
+                            'summary',
+                            'description',
+                            'created',
+                            'aggregateprogress',
+                            'priority',
+                            'status',
+                            'assignee',
+                            'creator'
+                        ]
+                    }, function (error, issues) {
 
-                    res.render('filter/view', {
-                        issues: issues,
-                        filter: filter
+                        if (error) throw error;
+
+                        res.render('filter/view', {
+                            issues: issues,
+                            filter: filter
+                        });
                     });
+
+                }).catch(userFilter.NotFoundError,function () {
+                    res.status(404).render('404');
+                }).catch(function (err) {
+                    res.status(500).render('error');
                 });
 
-            });
-    });
+        }).catch(filter.NotFoundError,function () {
+            res.status(404).render('404');
+        }).catch(function (err) {
+            res.status(500).render('error');
+        });
+});
 
 /**
  * Check if isLogged
