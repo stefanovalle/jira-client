@@ -20,6 +20,7 @@
     "morgan": "~1.0.0",
     "passport": "*",
     "passport-local": "*",
-    "static-favicon": "~1.0.0"
+    "static-favicon": "~1.0.0",
+    "sqlite3": "~2.2.7"
   }
 }
